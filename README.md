@@ -1,6 +1,16 @@
 ## Tickly
 Tickly is a cryptocurrency ticker and portfolio for your terminal.
 
+
+
+<p align="center">
+  <img src="https://i.imgur.com/v356oGz.png">
+</p>
+
+<p align="center">
+  <img src="https://i.imgur.com/bDFLTMD.png">
+</p>
+
 Supported exchanges:
 - Binance
 - Bitfinex

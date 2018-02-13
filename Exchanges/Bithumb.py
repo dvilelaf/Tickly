@@ -7,11 +7,12 @@ class Bithumb:
     
     name = 'Bithumb'
     
-    api = 'https://api.coinone.co.kr/'
+    api = 'https://api.bithumb.com/public/'
 
     wait_time = 1
 
-    valid_pairs = {'BTC' : ['BCH', 'ETH', 'ETC', 'XRP', 'QTUM', 'IOTA', 'LTC', 'BTG'],}
+    valid_pairs = {'KRW' : ['BTC', 'ETH', 'DASH', 'LTC', 'ETC', 'XRP', 
+                            'BCH', 'XMR', 'ZEC', 'QTUM', 'BTG', 'EOS'],}
 
 
     def __init__(self):
@@ -20,23 +21,25 @@ class Bithumb:
 
     def getData(self, base, quote):
             
-        currencyPair = quote.lower()
+        currencyPair = quote
 
         data = requests.get(self.api + 'ticker/?currency=' + currencyPair).json()
 
-        if data['result'] == 'error':
-            print(self.name + ' error: ' + data['errorMsg'])
+        if data['result'] != '0000':
+            print(self.name + ' error: ' + data['message'])
             return {}
+
+        data = data['data']
 
         out = {}
 
         out['base'] = base
         out['quote'] = quote
-        out['price' ] = float(data.pop('last')) # Not instant price
-        out['low24h' ] = float(data.pop('low'))
-        out['high24h'] = float(data.pop('high'))
+        out['price' ] = float(data.pop('average_price')) # Not instant price
+        out['low24h' ] = float(data.pop('min_price'))
+        out['high24h'] = float(data.pop('max_price'))
         out['change24h'] = -1
         out['volume24hbase'] = -1
-        out['volume24hquote'] = float(data.pop('volume'))
+        out['volume24hquote'] = float(data.pop('volume_1day'))
 
         return out

@@ -4,28 +4,36 @@ import sys
 import time
 import datetime
 import requests
-import Exchanges.Coinbase
-import Exchanges.Gdax
-import Exchanges.Poloniex
+
 import Exchanges.Binance
 import Exchanges.Bitfinex
+import Exchanges.Bithumb
 import Exchanges.Bitstamp
 import Exchanges.Bittrex
-import Exchanges.Bithumb
+import Exchanges.Coinbase
+import Exchanges.Coinone
+import Exchanges.Gdax
+import Exchanges.Gemini
+import Exchanges.Hitbtc
+import Exchanges.Kraken
+import Exchanges.Poloniex
 
 
 class Exchange:
     
-    exchanges = {'Coinbase' : Exchanges.Coinbase.Coinbase(),
-                 'Gdax' : Exchanges.Gdax.Gdax(),
-                 'Poloniex' : Exchanges.Poloniex.Poloniex(),
-                 'Binance' : Exchanges.Binance.Binance(),
+    exchanges = {'Binance' : Exchanges.Binance.Binance(),
                  'Bitfinex' : Exchanges.Bitfinex.Bitfinex(),
+                 'Bithumb' : Exchanges.Bithumb.Bithumb(),
                  'Bitstamp' : Exchanges.Bitstamp.Bitstamp(),
                  'Bittrex' : Exchanges.Bittrex.Bittrex(),
-                 'Bithumb' : Exchanges.Bithumb.Bithumb(),
-                 
-                 }
+                 'Coinbase' : Exchanges.Coinbase.Coinbase(),
+                 'Coinone' : Exchanges.Coinone.Coinone(),
+                 'Gdax' : Exchanges.Gdax.Gdax(),
+                 'Gemini' : Exchanges.Gemini.Gemini(),
+                 'Hitbtc' : Exchanges.Hitbtc.Hitbtc(),
+                 'Kraken' : Exchanges.Kraken.Kraken(),
+                 'Poloniex' : Exchanges.Poloniex.Poloniex(),
+                }
 
     
     def __init__(self):

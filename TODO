@@ -1,6 +1,6 @@
 - Check incorrect "advanced" data: low, high, change
-- Windows (non-ncurses branch)
 - Scrollable vertical table
 - Optional threading
 - Coinmarketcap for non-existing data 
 - Autogenerate exchange currency pairs
+- Generate and upload binaries

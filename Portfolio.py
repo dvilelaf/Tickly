@@ -2,13 +2,14 @@
 
 import re
 import sys
+import os
 import threading
 import Exchange
 import Wallet
 
 class Portfolio:
 
-    def __init__(self):
+    def __init__(self, filePath=None):
         
         try:
 
@@ -21,9 +22,13 @@ class Portfolio:
             self.daemons = []
             self.valueIncreased = True
             self.stop_thread = threading.Event()
-        
+
+            # Default file
+            if filePath is None:
+                filePath='portfolio'
+
             # Load portfolio file
-            with open('portfolio', 'r') as file:
+            with open(filePath, 'r') as file:
 
                 content = file.readlines()
 

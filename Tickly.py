@@ -1,10 +1,14 @@
 import curses
 import time
+import sys
 import Portfolio
 import UI
 
 # Init portfolio
-portfolio = Portfolio.Portfolio()
+if len(sys.argv) > 1:
+    portfolio = Portfolio.Portfolio(sys.argv[1])
+else:
+    portfolio = Portfolio.Portfolio()
 nwallets = len(portfolio.wallets)
 
 # Init ncurses

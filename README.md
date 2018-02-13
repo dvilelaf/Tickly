@@ -117,6 +117,11 @@ You can see a sample file in the repository, but as a quick lesson:
 
 
 
+# Known issues
+- The *advanced* section (high 24h, low 24h, volume and change 24h) is still experimental and usually shows wrong data.
+
+
+
 # Bug report
 
 If you detect a bug or find Tickly showing incorrect data, please report it in the issues section in this repository.

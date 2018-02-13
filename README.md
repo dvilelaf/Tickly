@@ -122,13 +122,13 @@ You can see a sample file in the repository, but as a quick lesson:
 
 
 
-# Bug report
+# Bug reports
 
 If you detect a bug or find Tickly showing incorrect data, please report it in the issues section in this repository.
 
 
 
-# Donation
+# Donations
 If you find Tickly useful, you can support it by making a small donation through Paypal or sending some 
 cryptocurrency to any of this addresses.
 

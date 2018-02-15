@@ -38,6 +38,7 @@ Tickly is a cryptocurrency ticker and portfolio for your terminal. It is coded i
     ```
     sudo apt install git python3
     ```
+    
 - Download or clone this repository:
     ```
     git clone https://github.com/derkomai/Tickly && cd Tickly
@@ -55,6 +56,7 @@ Tickly is a cryptocurrency ticker and portfolio for your terminal. It is coded i
     ```
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     ```
+
 - Ensure you have Python and Git installed
     ```
     brew install git python3
@@ -75,14 +77,14 @@ Tickly is a cryptocurrency ticker and portfolio for your terminal. It is coded i
 
 - Install Ubuntu terminal from the [Microsoft Store](https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6). The first time you launch the terminal you will be asked to create a user and set a password.
 
-- Download or clone this repository:
-    ```
-    cd ~ && git clone https://github.com/derkomai/Tickly && cd Tickly
-    ```
-
 - Ensure you have Python and Git installed:
     ```
     sudo apt install git python3
+    ```
+
+- Download or clone this repository:
+    ```
+    cd ~ && git clone https://github.com/derkomai/Tickly && cd Tickly
     ```
 
 - Run Tickly:

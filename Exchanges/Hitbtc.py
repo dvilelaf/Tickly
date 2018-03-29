@@ -107,9 +107,9 @@ class Hitbtc:
 
         out['base'] = base
         out['quote'] = quote
-        out['price' ] = float(data['last'])
-        out['low24h' ] = float(data['low'])
-        out['high24h'] = float(data['high'])
+        out['price' ] = 1.0 / float(data['last']) # Prices are reversed
+        out['low24h' ] = 1.0 / float(data['high'])
+        out['high24h'] = 1.0 / float(data['low'])
         out['change24h'] = -1
         out['volume24hbase'] = float(data['volume'])
         out['volume24hquote'] = float(data['volumeQuote'])

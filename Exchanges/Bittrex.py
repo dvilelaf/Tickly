@@ -69,15 +69,22 @@ class Bittrex:
             print(self.name + ' error: ' + data['message'])
             return {}
 
-        data = data['result'][currencyPair]
+        data = data['result']
+
+        for i in data:
+
+            if i['MarketName'] == currencyPair:
+                data = i
+                break
+
 
         out = {}
 
         out['base'] = 'USD' if base == 'USDT' else base
         out['quote'] = 'USD' if quote == 'USDT' else quote
         out['price' ] = 1.0 / float(data.pop('Last'))
-        out['low24h' ] = float(data.pop('Low'))
-        out['high24h'] = float(data.pop('High'))
+        out['low24h' ] = 1.0 / float(data.pop('Low'))
+        out['high24h'] = 1.0 / float(data.pop('High'))
         out['change24h'] = -1
         out['volume24hbase'] = float(data.pop('BaseVolume'))
         out['volume24hquote'] = float(data.pop('Volume'))

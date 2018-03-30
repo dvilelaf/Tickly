@@ -45,10 +45,10 @@ class Portfolio:
                 while i < n:
                     
                     # Delete comments
-                    line = line.split('#')[0]
+                    line = content[i].split('#')[0]
                     
                     # Clean line
-                    line = content[i].strip()
+                    line = line.strip()
 
                     # Clear empty lines
                     if line == '':

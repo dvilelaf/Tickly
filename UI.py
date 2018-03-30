@@ -190,9 +190,14 @@ class Table:
         data['ASSET'] = wallet.asset
         data['EXCHANGE'] = wallet.exchange
         data['PRICE (USD)'] = 1.0 / wallet.data['priceUSD']
-        data['%24H'] = wallet.data['change24h']
-        data['LOW 24H (USD)'] = 1.0 / wallet.data['low24h']
-        data['HIGH 24H (USD)'] = 1.0 / wallet.data['high24h']
+
+        if wallet.data['change24h'] == -1:
+            data['%24H'] = -1
+        else:
+            data['%24H'] = -1.0 * wallet.data['change24h']
+
+        data['LOW 24H (USD)'] = 1.0 / wallet.data['high24h']
+        data['HIGH 24H (USD)'] = 1.0 / wallet.data['low24h']
         data['VOLUME'] = wallet.data['volume24hquote']
         data['HOLDINGS'] = wallet.holdings
         data['VALUE (' + self.base + ')'] = wallet.data['value']

@@ -3,6 +3,25 @@ import time
 import sys
 import Portfolio
 import UI
+import socket
+
+def InternetConnection(host="8.8.8.8", port=53):
+    
+    try:
+        socket.setdefaulttimeout(1)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+        return True
+        
+    except Exception as ex:
+        pass
+
+    return False
+
+# Check connection
+if not InternetConnection():
+    print('No Internet connection detected. Exiting...')
+    sys.exit()
+    
 
 # Init portfolio
 if len(sys.argv) > 1:

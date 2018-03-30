@@ -16,6 +16,7 @@ import Exchanges.Gdax
 import Exchanges.Gemini
 import Exchanges.Hitbtc
 import Exchanges.Kraken
+import Exchanges.Kucoin
 import Exchanges.Poloniex
 
 
@@ -32,6 +33,7 @@ class Exchange:
                  'Gemini' : Exchanges.Gemini.Gemini(),
                  'Hitbtc' : Exchanges.Hitbtc.Hitbtc(),
                  'Kraken' : Exchanges.Kraken.Kraken(),
+                 'Kucoin' : Exchanges.Kucoin.Kucoin(),
                  'Poloniex' : Exchanges.Poloniex.Poloniex(),
                 }
 

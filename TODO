@@ -3,4 +3,5 @@
 - Optional threading
 - Coinmarketcap for non-existing data 
 - Autogenerate exchange currency pairs
-- Generate and upload binaries
+- Generate PyPI package
+

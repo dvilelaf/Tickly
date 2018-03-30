@@ -68,11 +68,11 @@ class Binance:
 
         out['base'] = 'USD' if base == 'USDT' else base
         out['quote'] = 'USD' if quote == 'USDT' else quote
-        out['price' ] = 1.0 / float(data.pop('lastPrice'))
-        out['low24h' ] = float(data.pop('lowPrice'))
-        out['high24h'] = float(data.pop('highPrice'))
-        out['change24h'] = float(data.pop('priceChangePercent'))
-        out['volume24hbase'] = float(data.pop('volume'))
-        out['volume24hquote'] = float(data.pop('quoteVolume'))
+        out['price' ] = 1.0 / float(data['lastPrice'])
+        out['low24h' ] = 1.0 / float(data['highPrice'])
+        out['high24h'] = 1.0 / float(data['lowPrice'])
+        out['change24h'] = -1.0 * float(data['priceChangePercent'])
+        out['volume24hbase'] = float(data['volume'])
+        out['volume24hquote'] = float(data['quoteVolume'])
 
         return out

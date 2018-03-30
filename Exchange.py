@@ -95,60 +95,251 @@ class Exchange:
     
         return data
 
-
+    
     def getData(self, exchange, base, quote):
         
-        # Base direct rate
-        if base in self.valid_pairs[exchange] and quote in self.valid_pairs[exchange][base]:
-            return self.getDataTimed(exchange, base, quote)
+        baseIsFiat = True if base in self.supportedFiat else False
+        quoteIsFiat = True if quote in self.supportedFiat else False
 
-        # Base inverse rate
-        if quote in self.valid_pairs[exchange] and base in self.valid_pairs[exchange][quote]:
-            return self.reverseData(self.getDataTimed(exchange, quote, base))
+        # Fiat to fiat
+        if baseIsFiat and quoteIsFiat:
+            return self.getFiatRate(base, quote)
 
-        # USD direct rate
-        if 'USD' in self.valid_pairs[exchange] and quote in self.valid_pairs[exchange]['USD']:
-            return self.getDataTimed(exchange, 'USD', quote)
 
-        # USD inverse rate
-        if quote in self.valid_pairs[exchange] and 'USD' in self.valid_pairs[exchange][quote]:
-            return self.reverseData(self.getDataTimed(exchange, quote, 'USD'))
+        # Get assets info
+        class AssetInfo:
+            
+            def __init__(self):
+                self.exists = False
+                self.isBase = False
+                self.bases = []
 
-        # BTC rate
-        if 'BTC' in self.valid_pairs[exchange] and quote in self.valid_pairs[exchange]['BTC']:
-            dataBTC = self.getDataTimed(exchange, 'BTC', quote)
-            dataUSD = self.getData(exchange, 'USD', 'BTC')
 
+        baseInfo = AssetInfo()
+        quoteInfo = AssetInfo()
+                
+        for i in self.valid_pairs[exchange]:
+            
+            if i == base:
+                baseInfo.exists = True
+                baseInfo.isBase = True
+
+            if i == quote:
+                quoteInfo.exists = True
+                quoteInfo.isBase = True
+                
+            if base in self.valid_pairs[exchange][i]:
+                baseInfo.exists = True
+                baseInfo.bases.append(i)
+                
+            if quote in self.valid_pairs[exchange][i]:
+                quoteInfo.exists = True
+                quoteInfo.bases.append(i)
+
+
+        # None of assets exist in the exchange
+        if not baseInfo.exists and not quoteInfo.exists:
             data = {}
-
-            data['base'] = 'USD'
+            data['base'] = base
             data['quote'] = quote
-            data['price'] = dataBTC['price'] * dataUSD['price']
+            data['price'] = -1
             data['low24h' ] = -1
             data['high24h'] = -1
             data['change24h'] = -1
             data['volume24hbase'] = -1
-            data['volume24hquote'] = dataBTC['volume24hquote']
+            data['volume24hquote'] = -1
 
             return data
 
-        # BTC inverse rate
-        if quote in self.valid_pairs[exchange] and 'BTC' in self.valid_pairs[exchange][quote]:
-            dataBTC = self.reverseData(self.getDataTimed(exchange, quote, 'BTC'))
-            dataUSD = self.getData(exchange, 'USD', 'BTC')
 
-            data = {}
+        # Both assets exist in the exchange
+        if baseInfo.exists and quoteInfo.exists:
 
-            data['base'] = 'USD'
-            data['quote'] = quote
-            data['price'] = dataBTC['price'] * dataUSD['price']
-            data['low24h' ] = -1
-            data['high24h'] = -1
-            data['change24h'] = -1
-            data['volume24hbase'] = -1
-            data['volume24hquote'] = dataBTC['volume24hquote']
+            # Direct rate
+            if baseInfo.isBase and base in quoteInfo.bases:
+                return self.getDataTimed(exchange, base, quote)
 
-            return data
+            # Inverse rate
+            if quoteInfo.isBase and quote in baseInfo.bases:
+                return self.reverseData(self.getDataTimed(exchange, quote, base))
 
-        print('Error getting rates for ' + quote + ' in ' + exchange)
-        sys.exit()
+            # Both are quotes
+            if not baseInfo.isBase and not quoteInfo.isBase:
+
+                # Common base
+                for baseBase in baseInfo.bases:
+                    if baseBase in quoteInfo.bases:
+                        dataBase = self.getDataTimed(exchange, baseBase, base)
+                        dataQuote = self.getDataTimed(exchange, baseBase, quote)
+
+                        data = {}
+
+                        data['base'] = base
+                        data['quote'] = quote
+                        data['price'] = dataQuote['price'] / dataBase['price']
+                        data['low24h' ] = -1
+                        data['high24h'] = -1
+                        data['change24h'] = -1
+                        data['volume24hbase'] = dataBase['volume24hquote']
+                        data['volume24hquote'] = dataQuote['volume24hquote']
+
+                        return data
+
+                # Different base
+                for baseBase in baseInfo.bases:
+                    for quoteBase in quoteInfo.bases:
+                        
+                        if baseBase in self.valid_pairs[exchange][quoteBase]:
+
+                            dataBase = self.getDataTimed(exchange, baseBase, base)
+                            dataQuote = self.getDataTimed(exchange, quoteBase, quote)
+                            dataBaseBase = self.getDataTimed(exchange, quoteBase, baseBase)
+
+                            data = {}
+                            data['base'] = base
+                            data['quote'] = quote
+                            data['price'] = dataQuote['price'] / (dataBase['price'] * dataBaseBase['price'])
+                            data['low24h' ] = -1
+                            data['high24h'] = -1
+                            data['change24h'] = -1
+                            data['volume24hbase'] = dataBase['volume24hquote']
+                            data['volume24hquote'] = dataQuote['volume24hquote']
+
+                            return data
+                        
+
+                        if quoteBase in self.valid_pairs[exchange][baseBase]:
+
+                            dataBase = self.getDataTimed(exchange, baseBase, base)
+                            dataQuote = self.getDataTimed(exchange, quoteBase, quote)
+                            dataQuoteBase = self.getDataTimed(exchange, baseBase, quoteBase)
+
+                            data = {}
+                            data['base'] = base
+                            data['quote'] = quote
+                            data['price'] = (dataQuote['price'] * dataQuoteBase['price']) / dataBase['price']
+                            data['low24h' ] = -1
+                            data['high24h'] = -1
+                            data['change24h'] = -1
+                            data['volume24hbase'] = dataBase['volume24hquote']
+                            data['volume24hquote'] = dataQuote['volume24hquote']
+
+                            return data
+
+                        
+                        for peer in self.valid_pairs[exchange][baseBase]:
+                            
+                            if peer in self.valid_pairs[exchange][quoteBase]:
+                                
+                                dataBase = self.getDataTimed(exchange, baseBase, base)
+                                dataQuote = self.getDataTimed(exchange, quoteBase, quote)
+                                dataPeerBase = self.getDataTimed(exchange, baseBase, peer)
+                                dataPeerQuote = self.getDataTimed(exchange, quoteBase, peer)
+
+                                data = {}
+                                data['base'] = base
+                                data['quote'] = quote
+                                data['price'] = (dataQuote['price'] * dataPeerBase['price']) / (dataBase['price'] * dataPeerQuote['price'])
+                                data['low24h' ] = -1
+                                data['high24h'] = -1
+                                data['change24h'] = -1
+                                data['volume24hbase'] = dataBase['volume24hquote']
+                                data['volume24hquote'] = dataQuote['volume24hquote']
+
+                                return data
+
+            # One is base, one is quote
+            if baseInfo.isBase and not quoteInfo.isBase:
+                
+                for quoteBase in quoteInfo.bases:
+                
+                    if quoteBase in self.valid_pairs[exchange][base]:
+                    
+                        dataBase = self.getDataTimed(exchange, base, quoteBase)
+                        dataQuote = self.getDataTimed(exchange, quoteBase, quote)
+
+                        data = {}
+                        data['base'] = base
+                        data['quote'] = quote
+                        data['price'] = dataBase['price'] * dataQuote['price']
+                        data['low24h' ] = -1
+                        data['high24h'] = -1
+                        data['change24h'] = -1
+                        data['volume24hbase'] = dataBase['volume24hbase']
+                        data['volume24hquote'] = dataQuote['volume24hquote']
+
+                        return data
+                
+            if not baseInfo.isBase and quoteInfo.isBase:
+                
+                for baseBase in baseInfo.bases:
+                    
+                    if baseBase in self.valid_pairs[exchange][quote]:
+                
+                        dataBase = self.getDataTimed(exchange, baseBase, base)
+                        dataQuote = self.getDataTimed(exchange, quote, baseBase)
+
+                        data = {}
+                        data['base'] = base
+                        data['quote'] = quote
+                        data['price'] = 1 / (dataBase['price'] * dataQuote['price'])
+                        data['low24h' ] = -1
+                        data['high24h'] = -1
+                        data['change24h'] = -1
+                        data['volume24hbase'] = dataBase['volume24hquote']
+                        data['volume24hquote'] = dataQuote['volume24hbase']
+
+                        return data
+
+
+        # Only one of the assets exist in the exchange
+        else:
+            
+            if not baseInfo.exists and baseIsFiat:
+                
+                baseRate = self.getFiatRate('USD', base)
+                dataQuote =  self.getData(exchange, 'USD', quote)
+                
+                data = {}
+                data['base'] = base
+                data['quote'] = quote
+                data['price'] = dataQuote['price'] / baseRate
+                data['low24h' ] = -1
+                data['high24h'] = -1
+                data['change24h'] = -1
+                data['volume24hbase'] = -1
+                data['volume24hquote'] = dataQuote['volume24hquote']
+
+                return data
+
+                    
+            if not quoteInfo.exists and quoteIsFiat:
+                    
+                dataBase =  self.getData(exchange, 'USD', base)
+                quoteRate = self.getFiatRate('USD', quote)
+                
+                data = {}
+                data['base'] = base
+                data['quote'] = quote
+                data['price'] = quoteRate / dataBase['price']
+                data['low24h' ] = -1
+                data['high24h'] = -1
+                data['change24h'] = -1
+                data['volume24hbase'] = dataBase['volume24hquote']
+                data['volume24hquote'] = -1
+
+                return data
+    
+
+        # Couldn't find rate
+        data = {}
+        data['base'] = base
+        data['quote'] = quote
+        data['price'] = -1
+        data['low24h' ] = -1
+        data['high24h'] = -1
+        data['change24h'] = -1
+        data['volume24hbase'] = -1
+        data['volume24hquote'] = -1
+
+        return data

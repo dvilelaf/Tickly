@@ -62,25 +62,14 @@ class Wallet:
             print('Error: bad quote received')
             sys.exit()
 
-        # Assign prices
-        if data['base'] == self.base:
-            self.data['oldPriceBASE'] = self.data['priceBASE']
-            self.data['priceBASE'] = data['price']
-            self.data['priceUSD'] = self.data['priceBASE'] * self.rateUSD
-
-        elif data['base'] == 'USD':
-            self.data['oldPriceBASE'] = self.data['priceBASE']
-            self.data['priceUSD'] = data['price']
-            self.data['priceBASE'] = self.data['priceUSD'] / self.rateUSD
-
-        else:
-            print('Error: received "' + data['base'] + '" for ' + self.base + '/' + self.asset + ' (' + self.exchange + ')')
-            sys.exit()
-
-        # Assign remaining values
-        for field in self.data:
-            
-            if field in data:
-                self.data[field] = data[field]
+        self.data['oldPriceBASE'] = self.data['priceBASE'] 
+        self.data['priceBASE'] = data['price'] 
+        self.data['priceUSD'] = self.data['priceBASE'] * self.rateUSD 
 
         self.data['value'] = self.holdings / self.data['priceBASE']
+
+        self.data['low24h'] = data['low24h']
+        self.data['high24h'] = data['high24h']
+        self.data['change24h'] = data['change24h']
+        self.data['volume24hbase'] = data['volume24hbase']
+        self.data['volume24hquote'] = data['volume24hquote']

@@ -44,15 +44,14 @@ class Portfolio:
                 # Search for variables
                 while i < n:
                     
+                    # Delete comments
+                    line = line.split('#')[0]
+                    
+                    # Clean line
                     line = content[i].strip()
 
+                    # Clear empty lines
                     if line == '':
-                        content.pop(i)
-                        n = len(content)
-                        i = i - 1
-                        continue
-
-                    if line[0] == '#':
                         content.pop(i)
                         n = len(content)
                         i = i - 1

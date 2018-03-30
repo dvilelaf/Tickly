@@ -17,7 +17,6 @@ class Portfolio:
             self.value = 0
             self.oldValue = 0
             self.base = 'USD'
-            self.tab = -1
             self.wallets = []
             self.daemons = []
             self.valueIncreased = True
@@ -68,8 +67,6 @@ class Portfolio:
 
                         if variable == 'FIAT' and value in self.exchange.supportedFiat:
                             self.base = value
-                        elif variable == 'TAB':
-                            self.tab = int(value)-1
                         else:
                             print('Error: variable not supported (' + variable + ')')
                             sys.exit()
@@ -112,11 +109,6 @@ class Portfolio:
                     print('Lines must follow the formats:')
                     print('"TICK AMOUNT EXCHANGE", e.g: "BTC 5.68 Gdax"')
                     print('"VARIABLE=VALUE", e.g: "BASE=EUR"')
-                    sys.exit()
-
-
-                if self.tab >= len(self.wallets):
-                    print('Error: TAB variable must be a number between 1 and the number of wallets (' + str(len(self.wallets)) + ')')
                     sys.exit()
 
 

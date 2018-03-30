@@ -88,7 +88,7 @@ class Exchange:
 
         data['volume24hbase'], data['volume24hquote'] = data['volume24hquote'], data['volume24hbase']
 
-        data['high24h'], data['low24h'] = 1.0 / data['high24h'], 1.0 / data['low24h']
+        data['high24h'], data['low24h'] = 1.0 / data['low24h'], 1.0 / data['high24h']
 
         if data['change24h'] != -1:
             data['change24h'] = -1.0 * data['change24h']

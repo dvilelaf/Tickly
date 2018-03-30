@@ -134,10 +134,12 @@ If you detect a bug or find Tickly showing incorrect data, please report it in t
 If you find Tickly useful, you can support it by making a small donation through Paypal or sending some 
 cryptocurrency to any of this addresses.
 
-*Ethereum:* 0xca59e0b52c48a894155b4b1f17d843afe4fe83ae  
-*Litecoin:* LQPkKfq3uPm7T54ht33xgxtNP38ARYpEsQ  
-*Ripple:* rwxQHDS6HnwXgZbRobZgC1ysfmaPM2Tkbi  
-*Bitcoin:* 1J5zEeRwiL5MRUGe4NAdcoyghCxZhiRB5N  
-*Bitcoin Cash:* 1FJMh712UM5FAbzEk8ox8Kexb6uxWu5f9u  
+*Ethereum/ERC20:* 0x0Ddc94917100387909cb6141c2e7e453bd31D3f7  
+*Litecoin:* MVXhiKnsMTiZYWfzdQ9BdJT8wDpSNrBme1  
+*Ripple:* rKYkrKq8vcCYkHWQT9DJSH4FbhqJ7zsSbm  
+*Stellar:* GBON6KJYAQMRYTMEOSZQI22MOGZK7FWKDLAIWXRLZSG2XEZ6RG73PUGT
+*Neo:* AGehUh61V2mjmhwsk3sGus5hEVYQZxexZa
+*Bitcoin:* 3F888TKJvWvkRmGVDyeCFAoBbFnLoYsrYP  
+*Bitcoin Cash:* 1LfY7Mjh3z11ek1A2exKm3JdXw8VheNHdU  
 
 *Paypal:*  [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.me/dvilela)

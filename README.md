@@ -24,6 +24,7 @@ Tickly is a cryptocurrency ticker and portfolio for your terminal. It is coded i
 - Gemini
 - Hitbtc
 - Kraken
+- Kucoin
 - Poloniex
 
 

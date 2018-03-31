@@ -147,4 +147,4 @@ cryptocurrency to any of this addresses.
 
 - *Bitcoin Cash:* 1LfY7Mjh3z11ek1A2exKm3JdXw8VheNHdU
 
-*Paypal:*  [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.me/dvilela)
+- *Paypal:*  [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.me/dvilela)

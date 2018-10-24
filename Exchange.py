@@ -42,7 +42,7 @@ class Exchange:
         
         self.valid_pairs = {self.exchanges[e].name : self.exchanges[e].valid_pairs for e in self.exchanges}
 
-        rates = requests.get('https://api.fixer.io/latest?base=USD').json()['rates']
+        rates = requests.get('https://api.exchangeratesapi.io/latest?base=USD').json()['rates']
 
         self.fiatRates = {r : float(rates[r]) for r in rates}
         self.supportedFiat = [r for r in self.fiatRates]

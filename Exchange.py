@@ -21,7 +21,7 @@ import Exchanges.Poloniex
 
 
 class Exchange:
-    
+
     exchanges = {'Binance' : Exchanges.Binance.Binance(),
                  'Bitfinex' : Exchanges.Bitfinex.Bitfinex(),
                  'Bithumb' : Exchanges.Bithumb.Bithumb(),
@@ -37,9 +37,9 @@ class Exchange:
                  'Poloniex' : Exchanges.Poloniex.Poloniex(),
                 }
 
-    
+
     def __init__(self):
-        
+
         self.valid_pairs = {self.exchanges[e].name : self.exchanges[e].valid_pairs for e in self.exchanges}
 
         rates = requests.get('https://api.exchangeratesapi.io/latest?base=USD').json()['rates']
@@ -50,7 +50,7 @@ class Exchange:
 
 
     def getFiatRate(self, base, quote):
-        
+
         if base == quote:
             return 1.0
 
@@ -64,11 +64,11 @@ class Exchange:
 
 
     def getDataTimed(self, exchange, base, quote):
-        
+
         delta = (datetime.datetime.now() - self.exchanges[exchange].lastCheck).total_seconds();
 
         while delta < self.exchanges[exchange].wait_time:
-            
+
             time.sleep(0.1)
 
             delta = (datetime.datetime.now() - self.exchanges[exchange].lastCheck).total_seconds();
@@ -76,14 +76,14 @@ class Exchange:
         data = self.exchanges[exchange].getData(base, quote)
 
         self.exchanges[exchange].lastCheck = datetime.datetime.now()
-        
+
         return data
 
 
     def reverseData(self, data):
-        
+
         data['base'], data['quote'] = data['quote'], data['base']
-        
+
         data['price'] = 1.0 / data['price']
 
         data['volume24hbase'], data['volume24hquote'] = data['volume24hquote'], data['volume24hbase']
@@ -92,12 +92,12 @@ class Exchange:
 
         if data['change24h'] != -1:
             data['change24h'] = -1.0 * data['change24h']
-    
+
         return data
 
-    
+
     def getData(self, exchange, base, quote):
-        
+
         baseIsFiat = True if base in self.supportedFiat else False
         quoteIsFiat = True if quote in self.supportedFiat else False
 
@@ -108,7 +108,7 @@ class Exchange:
 
         # Get assets info
         class AssetInfo:
-            
+
             def __init__(self):
                 self.exists = False
                 self.isBase = False
@@ -117,9 +117,9 @@ class Exchange:
 
         baseInfo = AssetInfo()
         quoteInfo = AssetInfo()
-                
+
         for i in self.valid_pairs[exchange]:
-            
+
             if i == base:
                 baseInfo.exists = True
                 baseInfo.isBase = True
@@ -127,11 +127,11 @@ class Exchange:
             if i == quote:
                 quoteInfo.exists = True
                 quoteInfo.isBase = True
-                
+
             if base in self.valid_pairs[exchange][i]:
                 baseInfo.exists = True
                 baseInfo.bases.append(i)
-                
+
             if quote in self.valid_pairs[exchange][i]:
                 quoteInfo.exists = True
                 quoteInfo.bases.append(i)
@@ -188,7 +188,7 @@ class Exchange:
                 # Different base
                 for baseBase in baseInfo.bases:
                     for quoteBase in quoteInfo.bases:
-                        
+
                         if baseBase in self.valid_pairs[exchange][quoteBase]:
 
                             dataBase = self.getDataTimed(exchange, baseBase, base)
@@ -206,7 +206,7 @@ class Exchange:
                             data['volume24hquote'] = dataQuote['volume24hquote']
 
                             return data
-                        
+
 
                         if quoteBase in self.valid_pairs[exchange][baseBase]:
 
@@ -226,11 +226,11 @@ class Exchange:
 
                             return data
 
-                        
+
                         for peer in self.valid_pairs[exchange][baseBase]:
-                            
+
                             if peer in self.valid_pairs[exchange][quoteBase]:
-                                
+
                                 dataBase = self.getDataTimed(exchange, baseBase, base)
                                 dataQuote = self.getDataTimed(exchange, quoteBase, quote)
                                 dataPeerBase = self.getDataTimed(exchange, baseBase, peer)
@@ -250,11 +250,11 @@ class Exchange:
 
             # One is base, one is quote
             if baseInfo.isBase and not quoteInfo.isBase:
-                
+
                 for quoteBase in quoteInfo.bases:
-                
+
                     if quoteBase in self.valid_pairs[exchange][base]:
-                    
+
                         dataBase = self.getDataTimed(exchange, base, quoteBase)
                         dataQuote = self.getDataTimed(exchange, quoteBase, quote)
 
@@ -269,13 +269,13 @@ class Exchange:
                         data['volume24hquote'] = dataQuote['volume24hquote']
 
                         return data
-                
+
             if not baseInfo.isBase and quoteInfo.isBase:
-                
+
                 for baseBase in baseInfo.bases:
-                    
+
                     if baseBase in self.valid_pairs[exchange][quote]:
-                
+
                         dataBase = self.getDataTimed(exchange, baseBase, base)
                         dataQuote = self.getDataTimed(exchange, quote, baseBase)
 
@@ -294,12 +294,12 @@ class Exchange:
 
         # Only one of the assets exist in the exchange
         else:
-            
+
             if not baseInfo.exists and baseIsFiat:
-                
+
                 baseRate = self.getFiatRate('USD', base)
                 dataQuote =  self.getData(exchange, 'USD', quote)
-                
+
                 data = {}
                 data['base'] = base
                 data['quote'] = quote
@@ -312,12 +312,12 @@ class Exchange:
 
                 return data
 
-                    
+
             if not quoteInfo.exists and quoteIsFiat:
-                    
+
                 dataBase =  self.getData(exchange, 'USD', base)
                 quoteRate = self.getFiatRate('USD', quote)
-                
+
                 data = {}
                 data['base'] = base
                 data['quote'] = quote
@@ -329,7 +329,7 @@ class Exchange:
                 data['volume24hquote'] = -1
 
                 return data
-    
+
 
         # Couldn't find rate
         data = {}
